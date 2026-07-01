@@ -32,7 +32,7 @@ def calculate_streak(user_id: str) -> int:
 
     # Collect unique reading dates, most recent first.
     dates = sorted(
-        set(e.started_at.date() for e in events),
+        set(e.finished_at.date() for e in events),
         reverse=True,
     )
 
@@ -68,7 +68,9 @@ def books_this_month(user_id: str) -> int:
     return sum(
         1
         for e in events
-        if e.finished_at.year == today.year and e.finished_at.month == today.month
+        if e.finished_at is not None
+        and e.finished_at.astimezone(timezone.utc).year == today.year
+        and e.finished_at.astimezone(timezone.utc).month == today.month
     )
 
 
